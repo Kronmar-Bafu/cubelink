@@ -192,7 +192,7 @@ class Cube:
         Returns:
             URIRef: The constructed cube URI as a URIRef object.
         """
-        cube_uri_no_version = self._base_uri + "/".join(["cube", str(self._cube_dict.get("Identifier"))])
+        cube_uri_no_version = self._base_uri + "/" + str(self._cube_dict.get("Identifier"))
         cube_uri = cube_uri_no_version + "/" + str(self._cube_dict.get("Version"))
 
         query = f"ASK {{ <{cube_uri}> ?p ?o}}"
