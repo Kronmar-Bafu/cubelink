@@ -154,12 +154,13 @@ class Cube:
         if self._cube_dict.get("Visualize"):
             self._graph.add((self._cube_uri, SCHEMA.workExample, URIRef("https://ld.admin.ch/application/visualize")))
 
+        if self._cube_dict.get("Opendataswiss") or opendataswiss:
+            self._add_opendata_profile()
+
         work_status = self._cube_dict.get("Work Status")
         if work_status == "Published":
             self._graph.add((self._cube_uri, SCHEMA.creativeWorkStatus,
                              URIRef("https://ld.admin.ch/vocabulary/CreativeWorkStatus/Published")))
-            if opendataswiss:
-                self._add_opendata_profile()
         elif work_status == "Draft":
             self._graph.add((self._cube_uri, SCHEMA.creativeWorkStatus,
                              URIRef("https://ld.admin.ch/vocabulary/CreativeWorkStatus/Draft")))
@@ -993,11 +994,15 @@ class Cube:
     def _add_opendata_profile(self):
         names = self._cube_dict.get("Name")
         for lan, name in names.items():
-            self._graph.add((self._cube_uri, SCHEMA.name, Literal(name, lang=lan)))
+            self._graph.add((self._cube_uri, DCT.title, Literal(name, lang=lan)))
 
         descriptions = self._cube_dict.get("Description")
         for lan, desc in descriptions.items():
             self._graph.add((self._cube_uri, DCT.description, Literal(desc, lang=lan)))
+
+        publisher = self._cube_dict.get("Publisher")
+        for pblshr in publisher:
+            self._graph.add((self._cube_uri, DCT.publisher, URIRef(pblshr.get("IRI"))))
 
         self._graph.add((self._cube_uri, SCHEMA.workExample, URIRef("https://ld.admin.ch/application/opendataswiss")))
 
